@@ -1,3 +1,10 @@
+# Project draft files
+tmp/
+
+# Ignored because we're reusing another virtualenv (pipenv)
+Pipfile
+Pipfile.lock
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
