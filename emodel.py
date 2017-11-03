@@ -28,9 +28,12 @@ class Election:
     def _fillnan_undecided(self):
         # Fill nan in undecided with: 100 - sum(choices)
         if 'undecided' in self.polls.columns:
+            self.polls['undecided'].fillna(
+                100 - self.polls[self.responses].fillna(0).sum(axis=1),
+                inplace=True)
 
-            self.polls['undecided'].fillna(100 - self.polls[self.response].fillna(0).sum(axis=1), inplace=True)
-            #self.polls['undecided]
+            # Remove negatives
+            self.polls['undecided'].clip_lower(0)
 
     def set_election_day(self, election_day):
         if type(election_day) is datetime.datetime:
@@ -61,6 +64,13 @@ class Election:
                 self.responses_uncertain = ['undecided']
             else:
                 self.responses.append(resp)
+
+
+    def inspect_data(self):
+        print('Columns with null values:')
+        print(self.election.polls.isnull.any())
+
+
 
 
 

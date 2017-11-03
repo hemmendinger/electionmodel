@@ -19,16 +19,15 @@ class TestElectionInit(unittest.TestCase):
     def setUp(self):
         test_csv = 'test-polls-00.csv'
         df = create_test_dataframe_from_csv(test_csv)
+        self.responses= ['response0', 'response1', 'undecided', 'other']
         self.election = emodel.Election(df)
 
     def test_init(self):
-
         self.assertIsInstance(self.election, emodel.Election)
         self.assertIsInstance(self.election.polls, pandas.DataFrame)
 
     def test_set_responses(self):
-        responses= ['response0', 'response1', 'undecided', 'other']
-        self.election.set_responses(responses)
+        self.election.set_responses(self.responses)
         self.assertEqual(self.election.responses, ['response0', 'response1', 'other',])
         self.assertEqual(self.election.responses_uncertain, ['undecided'])
 
@@ -46,7 +45,10 @@ class TestElectionInit(unittest.TestCase):
         self.election.set_election_day(dt)
         self.assertEqual(self.election.election_day, datetime.datetime.strptime('2016-11-08', '%Y-%m-%d'))
 
-    
+    def test_undecided_fill_missing(self):
+        self.election.set_responses(self.responses)
+        self.election._fillnan_undecided()
+        self.assertEqual(self.election.polls['undecided'].sum(), 25.0)
 
 
 
