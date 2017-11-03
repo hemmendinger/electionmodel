@@ -1,4 +1,6 @@
 import unittest
+
+import datetime
 import pandas
 
 import sys
@@ -34,6 +36,17 @@ class TestElectionInit(unittest.TestCase):
         interest = ['response0', 'response1']
         self.election.set_interest(interest)
         self.assertEqual(self.election.interest, ['response0', 'response1'])
+
+    def test_set_election_day_str(self):
+        self.election.set_election_day('2016-11-08')
+        self.assertEqual(self.election.election_day, datetime.datetime.strptime('2016-11-08', '%Y-%m-%d'))
+
+    def test_set_election_day_datetime(self):
+        dt = datetime.datetime.strptime('2016-11-08', '%Y-%m-%d')
+        self.election.set_election_day(dt)
+        self.assertEqual(self.election.election_day, datetime.datetime.strptime('2016-11-08', '%Y-%m-%d'))
+
+    
 
 
 
