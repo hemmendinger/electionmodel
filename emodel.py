@@ -71,21 +71,27 @@ class Election:
         print('Columns with null values:')
         print(self.election.polls.isnull.any())
 
+    def weigh_observations(self):
+        pass
 
 
+class Weighted:
+
+    def __init__(self):
+        pass
 
 
+class RecencyWeight:
 
+    @staticmethod
+    def exp_decay_rate(halflife: int):
+        """Calculate a rate to be used for an exponential decay function"""
+        return math.log(1/2) / halflife
 
-
-
-
-
-
-
-
-
-
-
-
+    @staticmethod
+    def exp_decay_weight(days, decay_rate):
+        """Calculate a weight based on days passed using a specific rate of decay,
+        the decay weight is exponential with more recent having a higher weight
+        """
+        return math.e**(decay_rate * days)
 
