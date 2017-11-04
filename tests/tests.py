@@ -15,6 +15,7 @@ def create_test_dataframe_from_csv(filename):
     df['end_date'] = pandas.to_datetime(df['start_date'])
     return df
 
+
 class TestElectionInit(unittest.TestCase):
     def setUp(self):
         test_csv = 'test-polls-00.csv'
@@ -50,6 +51,16 @@ class TestElectionInit(unittest.TestCase):
         self.election._fillnan_undecided()
         self.assertEqual(self.election.polls['undecided'].sum(), 25.0)
 
+
+class TestRecencyWeight(unittest.TestCase):
+
+    def test_exp_decay_rate(self):
+        """Rate of a 30 day halflife exponential decay"""
+        self.assertEqual(emodel.Weighted.exp_decay_rate(30), -0.023104906018664842)
+
+    def test_exp_decay_weight(self):
+        decay_rate = emodel.Weighted.exp_decay_rate(30)
+        self.assertEqual(emodel.Weighted.exp_decay_weight(days=30, decay_rate=decay_rate), 0.5)
 
 
 if __name__ == '__main__':
