@@ -11,7 +11,7 @@ class Election:
     """
 
     def __init__(self, polls: pd.DataFrame):
-        self.election_day = None
+        self.election_date = None
         self.days_remaining = None
 
         self.polls = polls
@@ -25,6 +25,20 @@ class Election:
 
         self.interest = None
 
+        self.setting_types = ['election_date', 'days_remaining', 'responses_uncertain', 'responses', 'interest']
+
+    def check(self):
+        missing = False
+        for setting in self.setting_types:
+            if setting is None:
+                missing = True
+                print('Detected unconfigured setting:', setting)
+
+        if missing:
+            print('Warning: unconfigured settings present, please resolve')
+
+        print('Columns with null values:')
+        print(self.election.polls.isnull.any())
 
     def _fillnan_undecided(self):
         # Fill nan in undecided with: 100 - sum(choices)
@@ -36,15 +50,18 @@ class Election:
             # Remove negatives
             self.polls['undecided'].clip_lower(0)
 
-    def set_election_day(self, election_day):
-        if type(election_day) is datetime.datetime:
-            self.election_day = election_day
-        elif type(election_day) is str:
-            self.election_day = datetime.datetime.strptime(election_day, '%Y-%m-%d')
+    def set_election_date(self, election_date):
+        """Set an election date from a datetime object or string
+        Set the days remaining based on that
+        If the date has already happened, days remaining will be set to 0"""
+        if type(election_date) is datetime.datetime:
+            self.election_date = election_date
+        elif type(election_date) is str:
+            self.election_date = datetime.datetime.strptime(election_date, '%Y-%m-%d')
 
-        self.days_remaining = (self.election_day - datetime.datetime.today()).days
-
-        if self.days_remaining < 0:
+        if self.election_date > datetime.datetime.now():
+            self.days_remaining = (self.election_date - datetime.datetime.today()).days
+        else:
             self.days_remaining = 0
 
     def set_interest(self, interest):
