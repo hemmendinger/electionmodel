@@ -88,7 +88,8 @@ class Weights:
 
     def __init__(self, election: Election):
         self.weights = pd.DataFrame()
-        self.weights['recency'] = election.election_date.days - election.polls['end_date'].days
+
+        self.weights['days_until_election'] = (election.election_date - election.polls['end_date']).dt.days
 
     @staticmethod
     def exp_decay_rate(halflife: int):

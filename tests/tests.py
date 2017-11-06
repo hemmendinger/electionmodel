@@ -12,7 +12,7 @@ import emodel
 def create_test_dataframe_from_csv(filename):
     df = pandas.read_csv(filename)
     df['start_date'] = pandas.to_datetime(df['start_date'])
-    df['end_date'] = pandas.to_datetime(df['start_date'])
+    df['end_date'] = pandas.to_datetime(df['end_date'])
     return df
 
 
@@ -73,6 +73,10 @@ class TestWeights(unittest.TestCase):
         self.election = emodel.Election(df)
         self.election.set_election_date('2016-11-08')
 
+        self.weights = emodel.Weights(self.election)
+
+    def test_days_remaining(self):
+        self.assertEqual(self.weights.weights['days_until_election'].tolist(), [1, 2, 2, 2, 5, 6, 7, 7, 8, 8])
 
     def test_exp_decay_rate(self):
         """Rate of a 30 day halflife exponential decay"""

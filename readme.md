@@ -17,3 +17,6 @@ Uses Pandas.Dataframe as its main datastructure.
 Data wrangling operations that are "editorial" in nature are included.
 By editorial I mean, an operation that reflects some subjective decision
 or assumption that could affect the model's performance.
+
+## Caution
+For bugs due to ordering of date columns, currently assuming ascending.
