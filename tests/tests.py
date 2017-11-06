@@ -63,15 +63,24 @@ class TestElectionInit(unittest.TestCase):
         self.assertEqual(self.election.polls['undecided'].sum(), 25.0)
 
 
-class TestWeighted(unittest.TestCase):
+
+
+class TestWeights(unittest.TestCase):
+    def setUp(self):
+        test_csv = 'test-polls-00.csv'
+        df = create_test_dataframe_from_csv(test_csv)
+        #self.responses= ['response0', 'response1', 'undecided', 'other']
+        self.election = emodel.Election(df)
+        self.election.set_election_date('2016-11-08')
+
 
     def test_exp_decay_rate(self):
         """Rate of a 30 day halflife exponential decay"""
-        self.assertEqual(emodel.Weighted.exp_decay_rate(30), -0.023104906018664842)
+        self.assertEqual(emodel.Weights.exp_decay_rate(30), -0.023104906018664842)
 
     def test_exp_decay_weight(self):
-        decay_rate = emodel.Weighted.exp_decay_rate(30)
-        self.assertEqual(emodel.Weighted.exp_decay_weight(days=30, decay_rate=decay_rate), 0.5)
+        decay_rate = emodel.Weights.exp_decay_rate(30)
+        self.assertEqual(emodel.Weights.exp_decay_weight(days=30, decay_rate=decay_rate), 0.5)
 
 
 if __name__ == '__main__':
