@@ -87,15 +87,20 @@ class Election:
 class Weights:
 
     def __init__(self, election: Election):
+        self.election = election
+
         self.halflife = 30
 
         self.weights = pd.DataFrame()
 
-        self.weights['days_until_election'] = (election.election_date - election.polls['end_date']).dt.days
+        self.weights['days_until_election'] = (self.election.election_date - self.election.polls['end_date']).dt.days
         self.weights['weight_time_decay'] = self.weights['days_until_election'].apply(
             lambda days:
             self.exp_decay_weight(days, self.exp_decay_rate(self.halflife))
         )
+
+        self.weights['weight_observations'] = self.observation_weight()
+
 
     @staticmethod
     def exp_decay_rate(halflife: int):
@@ -108,6 +113,16 @@ class Weights:
         the decay weight is exponential with more recent having a higher weight
         """
         return math.e**(decay_rate * days)
+
+    def observation_weight(self):
+        """Divide sample size by average sample size, then take the square root
+        Returns Pandas Series"""
+        series = self.election.polls['observations'] / self.election.polls['observations'].mean()
+        return series.apply(lambda x: math.sqrt(x))
+
+    def get_weight_average(self):
+        """Returns weighted average for a response"""
+        pass
 
 
 
