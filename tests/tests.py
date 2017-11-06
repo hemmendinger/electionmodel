@@ -38,13 +38,24 @@ class TestElectionInit(unittest.TestCase):
         self.assertEqual(self.election.interest, ['response0', 'response1'])
 
     def test_set_election_day_str(self):
-        self.election.set_election_day('2016-11-08')
-        self.assertEqual(self.election.election_day, datetime.datetime.strptime('2016-11-08', '%Y-%m-%d'))
+        self.election.set_election_date('2016-11-08')
+        self.assertEqual(self.election.election_date, datetime.datetime.strptime('2016-11-08', '%Y-%m-%d'))
 
     def test_set_election_day_datetime(self):
         dt = datetime.datetime.strptime('2016-11-08', '%Y-%m-%d')
-        self.election.set_election_day(dt)
-        self.assertEqual(self.election.election_day, datetime.datetime.strptime('2016-11-08', '%Y-%m-%d'))
+        self.election.set_election_date(dt)
+        self.assertEqual(self.election.election_date, datetime.datetime.strptime('2016-11-08', '%Y-%m-%d'))
+
+    def test_days_remaining_with_past_date(self):
+        dt = datetime.datetime.strptime('2016-11-08', '%Y-%m-%d')
+        self.election.set_election_date(dt)
+        self.assertEqual(self.election.days_remaining, pandas.Timedelta('0 days').days)
+
+    def test_days_remaining_with_future_date(self):
+        dt = datetime.datetime.strptime('2100-11-08', '%Y-%m-%d')
+        self.election.set_election_date(dt)
+        days_remaining = (dt - datetime.datetime.now()).days
+        self.assertEqual(self.election.days_remaining, days_remaining)
 
     def test_undecided_fill_missing(self):
         self.election.set_responses(self.responses)
@@ -52,7 +63,7 @@ class TestElectionInit(unittest.TestCase):
         self.assertEqual(self.election.polls['undecided'].sum(), 25.0)
 
 
-class TestRecencyWeight(unittest.TestCase):
+class TestWeighted(unittest.TestCase):
 
     def test_exp_decay_rate(self):
         """Rate of a 30 day halflife exponential decay"""
