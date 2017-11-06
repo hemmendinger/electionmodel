@@ -103,6 +103,8 @@ class Weights:
 
         self.weight_types = ['weight_time_decay', 'weight_observations']
 
+        self.update_weight_total(self.weight_types)
+
     @staticmethod
     def exp_decay_rate(halflife: int):
         """Calculate a rate to be used for an exponential decay function"""
@@ -121,9 +123,14 @@ class Weights:
         series = self.election.polls['observations'] / self.election.polls['observations'].mean()
         return series.apply(lambda x: math.sqrt(x))
 
-    def get_weight_average(self):
+    def update_weight_total(self, response):
         """Returns weighted average for a response"""
-        pass
+        self.weights['total_weight'] = 0
+
+        for wtype in self.weight_types:
+            self.weights['total_weight'] += self.weights[wtype]
+
+
 
 
 
