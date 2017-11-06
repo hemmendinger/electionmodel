@@ -18,5 +18,12 @@ Data wrangling operations that are "editorial" in nature are included.
 By editorial I mean, an operation that reflects some subjective decision
 or assumption that could affect the model's performance.
 
+## Goals
+- Make it easy to add, remove, and change model features
+- Make models easily reproducible
+- Adequate performance for tens of thousands of polls
+
+
 ## Caution
-For bugs due to ordering of date columns, currently assuming ascending.
+Watch for bugs due to ordering of dates, currently assuming ascending,
+but will attempt to avoid this problem.
