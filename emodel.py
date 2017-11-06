@@ -84,15 +84,11 @@ class Election:
                 self.responses.append(resp)
 
 
-    def inspect_data(self):
-        print('Columns with null values:')
-        print(self.election.polls.isnull.any())
+class Weights:
 
-
-class Weighted:
-
-    def __init__(self, election: pd.DataFrame):
-        pass
+    def __init__(self, election: Election):
+        self.weights = pd.DataFrame()
+        self.weights['recency'] = election.election_date.days - election.polls['end_date'].days
 
     @staticmethod
     def exp_decay_rate(halflife: int):
