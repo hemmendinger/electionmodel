@@ -101,6 +101,7 @@ class Weights:
 
         self.weights['weight_observations'] = self.observation_weight()
 
+        self.weight_types = ['weight_time_decay', 'weight_observations']
 
     @staticmethod
     def exp_decay_rate(halflife: int):
