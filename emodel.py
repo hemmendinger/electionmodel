@@ -38,7 +38,7 @@ class Election:
             print('Warning: unconfigured settings present, please resolve')
 
         print('Columns with null values:')
-        print(self.election.polls.isnull.any())
+        print(self.polls.isnull().any())
 
     def _fillnan_undecided(self):
         # Fill nan in undecided with: 100 - sum(choices)
